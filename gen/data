@@ -1,10 +1,16 @@
 @subtask samples
 manual sample1.in
+manual sample2.in
 
 @subtask task1
+gen 10000 1 1
+gen 10000 1 2
+gen 10000 1 3
+gen 10000 1 4
+gen 10000 1 5
+
+@subtask task2
 @include samples
-gen 10 5 1
-gen 10 5 2
 gen 100 50 1
 gen 100 50 2
 gen 100 100 1
@@ -13,11 +19,44 @@ gen 1000 500 1
 gen 1000 500 2
 gen 1000 1000 1
 gen 1000 1000 2
+skew 1000 1000 1
+skew 1000 1000 2
+
+@subtask task3
+@include samples
 gen 100000 5000 1
 gen 100000 5000 2
 gen 100000 5000 3
 gen 100000 5000 4
+gen 100000 5000 5
 gen 100000 10000 1
 gen 100000 10000 2
 gen 100000 10000 3
 gen 100000 10000 4
+gen 100000 10000 5
+
+@subtask task4
+@include samples
+@include task1
+@include task2
+@include task3
+gen 100000 10000 6
+gen 100000 10000 7
+gen 100000 10000 8
+gen 100000 10000 9
+gen 100000 10000 11
+gen 100000 10000 12
+gen 100000 10000 13
+gen 100000 10000 14
+gen 100000 10000 15
+gen 100000 10000 16
+skew 100000 100000 1
+skew 100000 100000 2
+skew 100000 100000 3
+skew 100000 100000 4
+skew 100000 100000 5
+skew 100000 100000 6
+skew 100000 100000 7
+skew 100000 100000 8
+skew 100000 100000 9
+skew 100000 100000 10

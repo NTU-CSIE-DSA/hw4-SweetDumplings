@@ -9,8 +9,26 @@
 		},
 		"task1": {
 			"index": 1,
+			"score": 5,
+			"text": "M = 1", 
+			"validators": [""]
+		},
+		"task2": {
+			"index": 2,
 			"score": 10,
-			"text": "", 
+			"text": "M, M <= 1000", 
+			"validators": [""]
+		},
+		"task3": {
+			"index": 3,
+			"score": 15,
+			"text": "a, b, c, d are generated ramdomly", 
+			"validators": [""]
+		},
+		"task4": {
+			"index": 4,
+			"score": 70,
+			"text": "no other constraint", 
 			"validators": [""]
 		}
 	}
