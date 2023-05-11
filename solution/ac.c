@@ -133,7 +133,7 @@ int insert (int *root, int big, int small, int pid) {
   }
 }
 
-int delete(int id) {
+int delete_nd (int id) {
   if (!ND(id).chd[LC] || !ND(id).chd[RC])
     return id;
   else {
@@ -249,7 +249,7 @@ int rb_insert(int *root, int big, int small) {
 }
 
 void rb_delete(int id) {
-  int nid = delete(id);
+  int nid = delete_nd(id);
   // print_rb_tree(rb_root, 0);
 
   int chd = CHD(nid, NO_LC(nid));
@@ -307,7 +307,7 @@ signed main () {
   // print_rb_tree(rb_root, 0);
   printf("%lld, %lld\n", ND(rb_root).sum[FST], ND(rb_root).sum[SEC]);
 
-  for (int i = 0; i < m; ++i) {
+  for (int i = 0; i < m - 1; ++i) {
     int id, big, small;
     scanf("%lld%lld%lld", &id, &big, &small);
     if (big < small)
@@ -316,7 +316,7 @@ signed main () {
     rb_delete(id2tid[id - 1]);
     id2tid[id - 1] = rb_insert(rb_root_ptr, big, small);
     // print_rb_tree(rb_root, 0);
-    printf("%lld, %lld\n", ND(rb_root).sum[FST], ND(rb_root).sum[SEC]);
+    printf("%lld %lld\n", ND(rb_root).sum[FST], ND(rb_root).sum[SEC]);
   }
 
   return 0;
