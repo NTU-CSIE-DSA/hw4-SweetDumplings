@@ -1,6 +1,7 @@
 *.out
 *.exe
 *.pyc
+*.tar.gz
 
 tests/
 logs/
