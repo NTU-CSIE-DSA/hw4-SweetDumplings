@@ -52,8 +52,9 @@ void print_rb_tree(int root, int layer) {
   for (int i = 0; i < layer; ++i) {
     printf(" ");
   }
-  printf("%lld, %lld, %lld, %lld, %lld, %lld, %lld\n",
-      tid2id[root], KEY(root), ND(root).color,
+  printf("%lld, %lld, %s, %lld, %lld, %lld, %lld\n",
+      tid2id[root], KEY(root), 
+      ND(root).color ? "RED" : "BLACK",
       ND(root).sum[0], ND(root).sum[1],
       ND(root).price[0], ND(root).price[1]);
   print_rb_tree(ND(root).chd[RC], layer + 1);
@@ -67,6 +68,7 @@ void print_rb_tree(int root, int layer) {
 // gen and init a new node
 int new_node (int big, int small, int pid) {
   int id = queue[fnt];
+  // printf("dispatch id: %lld\n", id);
   INC(fnt);
   pool[id].price[FST] = small;
   pool[id].price[SEC] = big;
@@ -240,7 +242,10 @@ void casely_delete(int nid) {
 // the insert of r-b tree
 int rb_insert(int *root, int big, int small) {
   int nid = insert(root, big, small, 0);
-
+  // printf("%lld\n", rb_root);
+  //
+  // printf("after purely insert\n");
+  // print_rb_tree(rb_root, 0);
   casely_insert(nid);
 
   push_up(nid);
@@ -253,6 +258,7 @@ void rb_delete(int id) {
   // print_rb_tree(rb_root, 0);
 
   int chd = CHD(nid, NO_LC(nid));
+  // printf("pid: %lld, nid: %lld, cid: %lld\n", PAR(nid), nid, chd);
   if (!PAR(nid)) {
     // printf("wrong situation\n");
     rb_root = chd;
@@ -261,8 +267,11 @@ void rb_delete(int id) {
   }
   else {
     // printf("correct situation\n");
+    // printf("pid: %lld, nid: %lld, cid: %lld\n", PAR(nid), nid, chd);
     ND(PAR(nid)).chd[IS_RC(nid)] = chd;
+    // print_rb_tree(rb_root, 0);
     ND(chd).pid = PAR(nid);
+
 
     if (ND(nid).color == BLACK) {
       // printf("wrong situation\n");
@@ -274,6 +283,7 @@ void rb_delete(int id) {
 
     // if (!chd) ND(chd).pid = 0;
   }
+
   
   push_up(PAR(nid));
 
@@ -294,18 +304,19 @@ signed main () {
     queue[i - 1] = i;
   }
 
-  for (int i = 0; i < n; ++i) {
+  for (int i = 1; i <= n; ++i) {
     int big, small;
     scanf("%lld%lld", &big, &small);
     if (big < small)
       big ^= small ^= big ^= small;
 
     id2tid[i] = rb_insert(rb_root_ptr, big, small);
+    // print_rb_tree(rb_root, 0);
     tid2id[id2tid[i]] = i;
   }
 
   // print_rb_tree(rb_root, 0);
-  printf("%lld, %lld\n", ND(rb_root).sum[FST], ND(rb_root).sum[SEC]);
+  printf("%lld\n", ND(rb_root).sum[FST]);
 
   for (int i = 0; i < m - 1; ++i) {
     int id, big, small;
@@ -313,10 +324,14 @@ signed main () {
     if (big < small)
       big ^= small ^= big ^= small;
 
-    rb_delete(id2tid[id - 1]);
-    id2tid[id - 1] = rb_insert(rb_root_ptr, big, small);
+    rb_delete(id2tid[id]);
+    // printf("after delete:\n");
     // print_rb_tree(rb_root, 0);
-    printf("%lld %lld\n", ND(rb_root).sum[FST], ND(rb_root).sum[SEC]);
+    id2tid[id] = rb_insert(rb_root_ptr, big, small);
+    tid2id[id2tid[id]] = id;
+    // printf("after insert:\n");
+    // print_rb_tree(rb_root, 0);
+    printf("%lld\n", ND(rb_root).sum[FST]);
   }
 
   return 0;
