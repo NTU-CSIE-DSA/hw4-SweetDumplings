@@ -32,19 +32,19 @@ The output should consist of $M$ lines. The $i$-th line should contain a single 
 - $1\le a_i, b_i, c_i, d_i \le 10^5$
 - $1 \le t_i\le N$
 
+### Subtask 1 (5pts)
+
+- $M = 1$
+
 ### Subtask 1 (10pts)
 
 - $1\le N, M \le 10^3$
-
-### Subtask 2 (15pts)
-
-- $M = 1$
 
 ### Subtask 3 (15pts)
 
 - $a_i, b_i, c_i, d_i$ are generated randomly.
 
-### Subtask 4 (60pts)
+### Subtask 4 (70pts)
 
 No other constraint
 
