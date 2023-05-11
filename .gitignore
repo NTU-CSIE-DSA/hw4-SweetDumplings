@@ -1,8 +1,7 @@
 *.out
 *.exe
+*.pyc
 
 tests/
 logs/
 sandbox/
- __pycache__/
- *.pyc
