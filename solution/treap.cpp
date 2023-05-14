@@ -5,6 +5,7 @@
 #define pii pair<int,int>
 #define pb push_back
 #define MAXN 100000
+#define MOD 1000000007
 
 using namespace std;
 
@@ -118,11 +119,14 @@ signed main () {
 
   // print_treap(treap, 0);
   cout << treap->sum[0] << '\n';
+  int prev = treap->sum[0] % MOD;
   
   for (int i = 1; i < m; ++i) {
-    int id, big, small;
-    cin >> id >> big >> small;
+    int id, c, d, e, f;
+    cin >> id >> c >> d >> e >> f;
 
+    int big = (c * prev + d) % MOD;
+    int small = (e * prev + f) % MOD;
     if (big < small)
       swap(big, small);
 
@@ -131,6 +135,7 @@ signed main () {
     id2key[id] = big - small;
     // print_treap(treap, 0);
     cout << treap->sum[0] << '\n';
+    prev = treap->sum[0] % MOD;
   }
 
   return 0;

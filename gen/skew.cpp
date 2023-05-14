@@ -4,6 +4,7 @@
 #define pii pair<int, int>
 
 #define MAXN 100000
+#define MAXP 100000000
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -15,7 +16,7 @@ int main(int argc, char *argv[]) {
   println(n, m);
   pair<int, int> arr[MAXN] = {};
   for (int i = 0; i < n; ++i) {
-    int a = rnd.next(1, MAXN), b = rnd.next(1, MAXN);
+    int a = rnd.next(1, MAXP), b = rnd.next(1, MAXP);
     arr[i] = {a, b};
   }
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
   }
 
   for (int i = 0; i < m - 1; ++i) {
-    int t = rnd.next(1, n), a = rnd.next(1, MAXN), b = rnd.next(1, MAXN);
-    println(t, a, b);
+    int t = rnd.next(1, n), a = rnd.next(0, MAXP), b = rnd.next(0, MAXP), c = rnd.next(0, MAXP), d = rnd.next(0, MAXP);
+    println(t, a, b, c, d);
   }
 }
