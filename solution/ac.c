@@ -267,10 +267,9 @@ void rb_delete(int id) {
       else
        casely_delete(chd);
     }
+    push_up(PAR(nid));
   }
 
-  
-  push_up(PAR(nid));
 
   del_node(nid);
   return;

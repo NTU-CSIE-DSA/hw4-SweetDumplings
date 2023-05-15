@@ -99,7 +99,6 @@ void node_swap (int a_nid, int b_nid) {
 }
 
 void push(int nid) {
-  if (nid == 0) return;
   int lc = CHD(nid, LC), rc = CHD(nid, RC);
 
   ND(nid).sz = ND(lc).sz + ND(rc).sz + 1;
@@ -268,10 +267,10 @@ void rb_delete(int id) {
     //   else
     //    casely_delete(chd);
     // }
+    push_up(PAR(nid));
   }
 
   
-  push_up(PAR(nid));
 
   del_node(nid);
   return;
