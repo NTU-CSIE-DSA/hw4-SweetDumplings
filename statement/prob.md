@@ -21,6 +21,8 @@ The next $N$ lines contain two integers each, $a_i$ and $b_i$, representing the 
 
 In the following $M-1$ lines, the $i$-th line contains three integers $t_i, c_i, d_i, e_i, f_i$. Indicating that the price of $t_i$-th sweet dumplings will change to $(c_i \times P + d_i \mod 1000000007)$ and $(e_i \times P + f_i \mod 1000000007)$ on day $i + 1$, where $P$ is the minimum cost for Alexander on the previous day.
 
+(This problem has nothing to do with the mathematical properties of the price-updating formula.)
+
 ## Output
 
 The output should consist of $M$ lines. The $i$-th line should contain a single integer representing the minimum cost for Alexander to buy all kinds of sweet dumplings on the $i$-th day.
@@ -37,7 +39,7 @@ The output should consist of $M$ lines. The $i$-th line should contain a single 
 
 - $M = 1$
 
-### Subtask 1 (10pts)
+### Subtask 2 (10pts)
 
 - $1\le N, M \le 10^3$
 
