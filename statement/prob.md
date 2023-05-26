@@ -1,17 +1,15 @@
 ## Description
 
-There are $N$ types of sweet dumplings for sale in DSA (Deluxe Supermarket Alliance) each day. For each type, there are two packs available at different prices.
+There are $N$ types of sweet dumplings for sale in DSA (Deluxe Supermarket Alliance). On any given day, each type of the dumplings have two packs available for purchase. However, these two packs of the same type have different prices.
 
-Alexander and Bomboo both want to buy one pack of each type of sweet dumpling for the following $M$ days. Because both of them want to minimize their costs, they agreed to buy sweet dumplings with the following rules:
+At the end of each day, Alexander and Bomboo both want to purchase all types of dumplings, each with one pack. Both of them want to make the purchase with minimum costs. As a result, they reached an agreement to buy the sweet dumplings with these rules:
 
-1. They will buy exactly one pack of sweet dumplings in turns, and Alexander goes first.
-2. Both of them will have exactly one pack per type at the end of the purchasing process for the $M$ days
-3. Sweet dumplings are restocked to two packs every day.
-4. Both of them are genius, hence they will use the optimal strategy to choose the pack to buy.
+1. On any day, they will each take turn to buy one pack of sweet dumpling until they complete the purchases for the day. Alexandar always goes first at the beginning of any day. Both of them are genius and they will use optimal strategy to make the purchases, in order to save money.
+2. For each of the $M$ days, each of them will complete the purchase for all $N$ types of dumplings, each with one pack.
+3. At the beginning of each day, each of the $N$ types of sweet dumplings are restocked to two packs. 
+4. At the end of each day, the prices of two packs of one type of dumpling will be changed.
 
-However, the prices of sweet dumplings are changing. Every day except the first day, the price of exactly one type of sweet dumpling will permanently change.
-
-Can you help Alexander to calculate his cost each day?
+Your goal is to help Alexandar to determine the cost to make the purchase for each of the $M$ days.
 
 ## Input
 
