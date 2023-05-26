@@ -11,13 +11,13 @@
 			"index": 1,
 			"score": 5,
 			"text": "M = 1", 
-			"validators": [""]
+			"validators": ["val1.cpp"]
 		},
 		"task2": {
 			"index": 2,
 			"score": 10,
 			"text": "M, M <= 1000", 
-			"validators": [""]
+			"validators": ["val2.cpp"]
 		},
 		"task3": {
 			"index": 3,

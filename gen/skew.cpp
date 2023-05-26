@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 	registerGen(argc, argv, 1);
 
   int n = atoi(argv[1]);
-  int m = atoi(argv[1]);
+  int m = atoi(argv[2]);
 
   println(n, m);
   pair<int, int> arr[MAXN] = {};
