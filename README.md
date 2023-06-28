@@ -49,3 +49,7 @@ To solve this problem, we need to keep track of two pieces of information at eac
 2. The cost of Alexander as the second player in this segment.
 
 By doing so, each time we change the prices, we can flexibly determine the current expenditure based on the updated first/second player status in each range. And the answer for each day will be the first player expenditure at the root node.
+
+## Source Code
+
+[Source Code](./solution/ac.c)
