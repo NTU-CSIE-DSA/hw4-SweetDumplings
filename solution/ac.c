@@ -9,20 +9,20 @@
 #define RED 1
 #define FST 0 // first hand
 #define SEC 1 // second hand
-#define LC 0 // left child
-#define RC 1 // right child
+#define LEFT_CHILD 0 // left child
+#define RIGHT_CHILD 1 // right child
 #define MOD 1000000007
 
 // r-b tree function
-#define ND(x) (pool[(x)]) // transform id into node
-#define PAR(x) (pool[(x)].pid) // return parent id
-#define GPAR(x) (PAR(PAR((x)))) // return grand parent id
-#define CHD(x, lr) (ND((x)).chd[(lr)])
-#define IS_RC(x) (ND(PAR((x))).chd[RC] == (x)) // check if the node is right child
-#define NO_LC(x) (ND((x)).chd[LC] == 0) // check if a node has left child
-#define UNCLE(x) (ND(GPAR((x))).chd[!IS_RC(PAR((x)))]) // return uncle id
-#define SIBLING(x) (ND(PAR(x)).chd[!IS_RC((x))]) // return sibling id
-#define KEY(x) (ND((x)).price[RC] - ND((x)).price[LC]) // get key
+#define GET_NODE(x) (pool[(x)]) // transform id into node
+#define PARENT(x) (pool[(x)].pid) // return parent id
+#define GRAND_PARENT(x) (PARENT(PARENT((x)))) // return grand parent id
+#define CHILD(x, lr) (GET_NODE((x)).chd[(lr)])
+#define IS_RIGHT_CHILD(x) (GET_NODE(PARENT((x))).chd[RIGHT_CHILD] == (x)) // check if the node is right child
+#define NO_LEFT_CHILD(x) (GET_NODE((x)).chd[LEFT_CHILD] == 0) // check if a node has left child
+#define UNCLE(x) (GET_NODE(GRAND_PARENT((x))).chd[!IS_RIGHT_CHILD(PARENT((x)))]) // return uncle id
+#define SIBLING(x) (GET_NODE(PARENT(x)).chd[!IS_RIGHT_CHILD((x))]) // return sibling id
+#define KEY(x) (GET_NODE((x)).price[RIGHT_CHILD] - GET_NODE((x)).price[LEFT_CHILD]) // get key
 
 // queue function
 #define INC(x) ((x) = ((x) == MAXN ? 0 : (x) + 1))
@@ -49,16 +49,16 @@ void print_rb_tree(int root, int layer) {
   }
   if (root == 0)
     return;
-  print_rb_tree(ND(root).chd[LC], layer + 1);
+  print_rb_tree(GET_NODE(root).chd[LEFT_CHILD], layer + 1);
   for (int i = 0; i < layer; ++i) {
     printf(" ");
   }
   printf("%lld, %lld, %s, %lld, %lld, %lld, %lld\n",
       tid2id[root], KEY(root), 
-      ND(root).color ? "RED" : "BLACK",
-      ND(root).sum[0], ND(root).sum[1],
-      ND(root).price[0], ND(root).price[1]);
-  print_rb_tree(ND(root).chd[RC], layer + 1);
+      GET_NODE(root).color ? "RED" : "BLACK",
+      GET_NODE(root).sum[0], GET_NODE(root).sum[1],
+      GET_NODE(root).price[0], GET_NODE(root).price[1]);
+  print_rb_tree(GET_NODE(root).chd[RIGHT_CHILD], layer + 1);
 
   if (layer == 0) {
     printf("e====================\n");
@@ -74,7 +74,7 @@ int new_node (int big, int small, int pid) {
   pool[id].price[SEC] = big;
   pool[id].sum[FST] = small;
   pool[id].sum[SEC] = big;
-  pool[id].chd[LC] = pool[id].chd[RC] = 0;
+  pool[id].chd[LEFT_CHILD] = pool[id].chd[RIGHT_CHILD] = 0;
   pool[id].color = RED;
   pool[id].sz = 1;
   pool[id].id = id;
@@ -83,12 +83,12 @@ int new_node (int big, int small, int pid) {
 }
 
 void node_swap (int a_nid, int b_nid) {
-  Node tmp = ND(a_nid);
-  ND(a_nid).price[FST] = ND(b_nid).price[FST];
-  ND(a_nid).price[SEC] = ND(b_nid).price[SEC];
+  Node tmp = GET_NODE(a_nid);
+  GET_NODE(a_nid).price[FST] = GET_NODE(b_nid).price[FST];
+  GET_NODE(a_nid).price[SEC] = GET_NODE(b_nid).price[SEC];
 
-  ND(b_nid).price[FST] = tmp.price[FST];
-  ND(b_nid).price[SEC] = tmp.price[SEC];
+  GET_NODE(b_nid).price[FST] = tmp.price[FST];
+  GET_NODE(b_nid).price[SEC] = tmp.price[SEC];
 
   int tmpid = tid2id[a_nid];
   tid2id[a_nid] = tid2id[b_nid];
@@ -99,19 +99,19 @@ void node_swap (int a_nid, int b_nid) {
 }
 
 void push(int nid) {
-  int lc = CHD(nid, LC), rc = CHD(nid, RC);
+  int lc = CHILD(nid, LEFT_CHILD), rc = CHILD(nid, RIGHT_CHILD);
 
-  ND(nid).sz = ND(lc).sz + ND(rc).sz + 1;
-  ND(nid).sum[FST] = ND(lc).sum[FST] + ND(rc).sum[!(ND(lc).sz & 1)] + ND(nid).price[ND(lc).sz & 1];
-  ND(nid).sum[SEC] = ND(lc).sum[SEC] + ND(rc).sum[ND(lc).sz & 1] + ND(nid).price[!(ND(lc).sz & 1)];
+  GET_NODE(nid).sz = GET_NODE(lc).sz + GET_NODE(rc).sz + 1;
+  GET_NODE(nid).sum[FST] = GET_NODE(lc).sum[FST] + GET_NODE(rc).sum[!(GET_NODE(lc).sz & 1)] + GET_NODE(nid).price[GET_NODE(lc).sz & 1];
+  GET_NODE(nid).sum[SEC] = GET_NODE(lc).sum[SEC] + GET_NODE(rc).sum[GET_NODE(lc).sz & 1] + GET_NODE(nid).price[!(GET_NODE(lc).sz & 1)];
 
   return;
 }
 
 void push_up(int nid) {
   push(nid);
-  if (PAR(nid)) {
-    push_up(PAR(nid));
+  if (PARENT(nid)) {
+    push_up(PARENT(nid));
   }
 }
 
@@ -136,12 +136,12 @@ int insert (int *root, int big, int small, int pid) {
 }
 
 int delete_nd (int id) {
-  if (!ND(id).chd[LC] || !ND(id).chd[RC])
+  if (!GET_NODE(id).chd[LEFT_CHILD] || !GET_NODE(id).chd[RIGHT_CHILD])
     return id;
   else {
-    int tar = ND(id).chd[LC];
-    while (ND(tar).chd[RC]) {
-      tar = ND(tar).chd[RC];
+    int tar = GET_NODE(id).chd[LEFT_CHILD];
+    while (GET_NODE(tar).chd[RIGHT_CHILD]) {
+      tar = GET_NODE(tar).chd[RIGHT_CHILD];
     }
     
     node_swap(id, tar);
@@ -151,22 +151,22 @@ int delete_nd (int id) {
 
 // rotate, nid is the origin root, and dir is the index of child which will be the new root.
 void rotate(int nid, int dir) {
-  int pid = PAR(nid), cid = ND(nid).chd[dir];
+  int pid = PARENT(nid), cid = GET_NODE(nid).chd[dir];
 
   // link cid to pid
   if (pid)
-    ND(pid).chd[IS_RC(nid)] = cid;
+    GET_NODE(pid).chd[IS_RIGHT_CHILD(nid)] = cid;
   else
     rb_root = cid;
-  ND(cid).pid = pid;
+  GET_NODE(cid).pid = pid;
 
   // link the child of cid to nid
-  ND(nid).chd[dir] = ND(cid).chd[!dir];
-  ND(ND(cid).chd[!dir]).pid = nid;
+  GET_NODE(nid).chd[dir] = GET_NODE(cid).chd[!dir];
+  GET_NODE(GET_NODE(cid).chd[!dir]).pid = nid;
 
   // link cid to nid
-  ND(cid).chd[!dir] = nid;
-  ND(nid).pid = cid;
+  GET_NODE(cid).chd[!dir] = nid;
+  GET_NODE(nid).pid = cid;
 
   // update data
   push(nid);
@@ -177,62 +177,62 @@ void rotate(int nid, int dir) {
 
 // the complex flow controll of rb insertion
 void casely_insert(int nid) {
-  if (PAR(nid) == 0)
-    ND(nid).color = BLACK;
-  else if (ND(PAR(nid)).color == BLACK)
+  if (PARENT(nid) == 0)
+    GET_NODE(nid).color = BLACK;
+  else if (GET_NODE(PARENT(nid)).color == BLACK)
     ;
-  else if (UNCLE(nid) && ND(UNCLE(nid)).color == RED) {
-    ND(PAR(nid)).color = ND(UNCLE(nid)).color = BLACK;
-    ND(GPAR(nid)).color = RED;
-    casely_insert(GPAR(nid));
+  else if (UNCLE(nid) && GET_NODE(UNCLE(nid)).color == RED) {
+    GET_NODE(PARENT(nid)).color = GET_NODE(UNCLE(nid)).color = BLACK;
+    GET_NODE(GRAND_PARENT(nid)).color = RED;
+    casely_insert(GRAND_PARENT(nid));
   }
   else {
-    if (IS_RC(nid) != IS_RC(PAR(nid))) {
-      rotate(PAR(nid), IS_RC(nid));
-      nid = ND(nid).chd[IS_RC(nid)];
+    if (IS_RIGHT_CHILD(nid) != IS_RIGHT_CHILD(PARENT(nid))) {
+      rotate(PARENT(nid), IS_RIGHT_CHILD(nid));
+      nid = GET_NODE(nid).chd[IS_RIGHT_CHILD(nid)];
     }
 
-    ND(GPAR(nid)).color = RED;
-    ND(PAR(nid)).color = BLACK;
-    rotate(GPAR(nid), IS_RC(PAR(nid)));
+    GET_NODE(GRAND_PARENT(nid)).color = RED;
+    GET_NODE(PARENT(nid)).color = BLACK;
+    rotate(GRAND_PARENT(nid), IS_RIGHT_CHILD(PARENT(nid)));
   }
   return;
 }
 
 void casely_delete(int nid) {
-  if (PAR(nid)) {
+  if (PARENT(nid)) {
     int sibling = SIBLING(nid);
-    if (ND(SIBLING(nid)).color == RED) {
-      ND(PAR(nid)).color = RED;
-      ND(sibling).color = BLACK;
+    if (GET_NODE(SIBLING(nid)).color == RED) {
+      GET_NODE(PARENT(nid)).color = RED;
+      GET_NODE(sibling).color = BLACK;
 
-      rotate(PAR(nid), IS_RC(sibling));
+      rotate(PARENT(nid), IS_RIGHT_CHILD(sibling));
       casely_delete(nid);
     }
-    else if (ND(PAR(nid)).color == BLACK &&
-        ND(CHD(sibling, LC)).color == BLACK &&
-        ND(CHD(sibling, RC)).color == BLACK) {
-      ND(sibling).color = RED;
-      casely_delete(PAR(nid));
+    else if (GET_NODE(PARENT(nid)).color == BLACK &&
+        GET_NODE(CHILD(sibling, LEFT_CHILD)).color == BLACK &&
+        GET_NODE(CHILD(sibling, RIGHT_CHILD)).color == BLACK) {
+      GET_NODE(sibling).color = RED;
+      casely_delete(PARENT(nid));
     }
-    else if (ND(CHD(sibling, LC)).color == BLACK &&
-        ND(CHD(sibling, RC)).color == BLACK) {
-      ND(sibling).color = RED;
-      ND(PAR(nid)).color = BLACK;
+    else if (GET_NODE(CHILD(sibling, LEFT_CHILD)).color == BLACK &&
+        GET_NODE(CHILD(sibling, RIGHT_CHILD)).color == BLACK) {
+      GET_NODE(sibling).color = RED;
+      GET_NODE(PARENT(nid)).color = BLACK;
       return;
     }
     else {
-      if (ND(CHD(sibling, IS_RC(sibling))).color != RED) {
-        rotate(sibling, !IS_RC(sibling));
-        ND(sibling).color = RED;
-        ND(PAR(sibling)).color = BLACK;
-        sibling = PAR(sibling);
+      if (GET_NODE(CHILD(sibling, IS_RIGHT_CHILD(sibling))).color != RED) {
+        rotate(sibling, !IS_RIGHT_CHILD(sibling));
+        GET_NODE(sibling).color = RED;
+        GET_NODE(PARENT(sibling)).color = BLACK;
+        sibling = PARENT(sibling);
       }
 
-      ND(sibling).color = ND(PAR(sibling)).color;
-      ND(PAR(sibling)).color = BLACK;
-      ND(CHD(sibling, IS_RC(sibling))).color = BLACK;
-      rotate(PAR(sibling), IS_RC(sibling));
+      GET_NODE(sibling).color = GET_NODE(PARENT(sibling)).color;
+      GET_NODE(PARENT(sibling)).color = BLACK;
+      GET_NODE(CHILD(sibling, IS_RIGHT_CHILD(sibling))).color = BLACK;
+      rotate(PARENT(sibling), IS_RIGHT_CHILD(sibling));
     }
   }
 }
@@ -250,24 +250,24 @@ int rb_insert(int *root, int big, int small) {
 void rb_delete(int id) {
   int nid = delete_nd(id);
 
-  int chd = CHD(nid, NO_LC(nid));
-  if (!PAR(nid)) {
+  int chd = CHILD(nid, NO_LEFT_CHILD(nid));
+  if (!PARENT(nid)) {
     rb_root = chd;
-    ND(chd).pid = 0;
-    ND(chd).color = BLACK;
+    GET_NODE(chd).pid = 0;
+    GET_NODE(chd).color = BLACK;
   }
   else {
-    ND(PAR(nid)).chd[IS_RC(nid)] = chd;
-    ND(chd).pid = PAR(nid);
+    GET_NODE(PARENT(nid)).chd[IS_RIGHT_CHILD(nid)] = chd;
+    GET_NODE(chd).pid = PARENT(nid);
 
 
-    if (ND(nid).color == BLACK) {
-      if (ND(chd).color == RED)
-        ND(chd).color = BLACK;
+    if (GET_NODE(nid).color == BLACK) {
+      if (GET_NODE(chd).color == RED)
+        GET_NODE(chd).color = BLACK;
       else
        casely_delete(chd);
     }
-    push_up(PAR(nid));
+    push_up(PARENT(nid));
   }
 
 
@@ -295,8 +295,8 @@ signed main () {
     tid2id[id2tid[i]] = i;
   }
 
-  printf("%lld\n", ND(rb_root).sum[FST]);
-  int prev = ND(rb_root).sum[FST] % MOD;
+  printf("%lld\n", GET_NODE(rb_root).sum[FST]);
+  int prev = GET_NODE(rb_root).sum[FST] % MOD;
 
   for (int i = 0; i < m - 1; ++i) {
     int id, c, d, e, f;
@@ -309,8 +309,8 @@ signed main () {
     rb_delete(id2tid[id]);
     id2tid[id] = rb_insert(rb_root_ptr, big, small);
     tid2id[id2tid[id]] = id;
-    printf("%lld\n", ND(rb_root).sum[FST]);
-    prev = ND(rb_root).sum[FST] % MOD;
+    printf("%lld\n", GET_NODE(rb_root).sum[FST]);
+    prev = GET_NODE(rb_root).sum[FST] % MOD;
   }
 
   return 0;
